@@ -24,29 +24,8 @@ Public guidance: https://www.nice.org.uk/guidance/ta1074
 ![Pipeline Diagram](Research_workflow.png)
 
 #
-1. Manually extracted 5 gold-standard PICO fields.
-2. Designed a structured JSON extraction prompt with anti-hallucination rules.
-3. Ran the prompt **5 times** using **Gemini 3.6 Flash** (temperature 0.1).
-4. Compared runs field by field; flagged any disagreement.
-5. Simulated a researcher-in-the-loop review for flagged fields.
-6. Evaluated against gold standard using accuracy, precision, recall, F1.
 
-## 4. Headline Result
-
-| Method | Accuracy |
-|--------|----------|
-| Single run | 5/5 (100%) |
-| Multi-run + consistency check | 5/5 (100%) |
-| After evaluation metric correction | 5/5 (100%) |
-
-The model was perfectly accurate and consistent across all 5 runs.
-
-**Key finding:** A token-overlap metric marked a correct extraction as wrong,
-because the effect size was expressed as a geometric LS mean ratio rather than
-a percentage change. Both are clinically equivalent. This shows that
-**evaluation methodology matters as much as model capability**.
-
-## 5. Repository Structure
+## 4. Repository Structure
 
 ```text
 hta-genai-consistency/
@@ -72,7 +51,7 @@ hta-genai-consistency/
     └── evaluate.py
 ```
 
-## 6. Getting Started
+## 5. Getting Started
 
 ### Prerequisites
 - Python 3.9+
@@ -102,13 +81,8 @@ python src/check_consistency.py
 # Evaluate against the gold standard
 python src/evaluate.py
 ```
-# 7. Limitations
-- Single report, single therapy area
-- Simplified 5-field schema (not Versteeg et al.'s 14 attributes)
-- 5 runs — enough to show consistency, not to estimate accuracy
-- Single LLM provider (Gemini 3.6 Flash)
 
-# 8.  References
-Versteeg et al. (2026). JAMIA Open, 9(2).\
-NICE TA1074. https://www.nice.org.uk/guidance/ta1074\
-EU HTA Regulation (EU) 2021/2282
+# 7.  References
+- Versteeg et al. (2026). JAMIA Open, 9(2).
+- NICE TA1074. https://www.nice.org.uk/guidance/ta1074 
+- EU HTA Regulation (EU) 2021/2282
