@@ -1,0 +1,47 @@
+[
+  {
+    "population": "adults with biopsy-confirmed primary IgAN and persistent proteinuria despite at least 12 weeks of stable, maximum RASi therapy",
+    "intervention": "sparsentan",
+    "comparator": "irbesartan",
+    "primary_outcome": "percentage change in UPCR from baseline to week 36",
+    "effect_size": "geometric LS mean ratio 0.59 (95% CI 0.51 to 0.69)",
+    "_run": 1,
+    "_temperature": 0.1
+  },
+  {
+    "population": "Adults with biopsy-confirmed primary IgAN and persistent proteinuria despite at least 12 weeks of stable, maximum RASi therapy",
+    "intervention": "Sparsentan",
+    "comparator": "Irbesartan",
+    "primary_outcome": "Percentage change in UPCR from baseline to week 36",
+    "effect_size": "Geometric LS mean ratio 0.59 (95% CI 0.51 to 0.69)",
+    "_run": 2,
+    "_temperature": 0.1
+  },
+  {
+    "population": "adults with biopsy-confirmed primary IgAN and persistent proteinuria despite at least 12 weeks of stable, maximum RASi therapy",
+    "intervention": "sparsentan",
+    "comparator": "irbesartan",
+    "primary_outcome": "percentage change in UPCR from baseline to week 36",
+    "effect_size": "geometric LS mean ratio 0.59 (95% CI 0.51 to 0.69)",
+    "_run": 3,
+    "_temperature": 0.1
+  },
+  {
+    "population": "Adults with biopsy-confirmed primary IgAN and persistent proteinuria despite at least 12 weeks of stable, maximum RASi therapy",
+    "intervention": "Sparsentan",
+    "comparator": "Irbesartan",
+    "primary_outcome": "Percentage change in UPCR from baseline to week 36",
+    "effect_size": "Geometric LS mean ratio 0.59 (95% CI 0.51 to 0.69)",
+    "_run": 4,
+    "_temperature": 0.1
+  },
+  {
+    "population": "adults with biopsy-confirmed primary IgAN and persistent proteinuria despite at least 12 weeks of stable, maximum RASi therapy",
+    "intervention": "sparsentan",
+    "comparator": "irbesartan",
+    "primary_outcome": "percentage change in UPCR from baseline to week 36",
+    "effect_size": "geometric LS mean ratio 0.59 (95% CI 0.51 to 0.69)",
+    "_run": 5,
+    "_temperature": 0.1
+  }
+]
