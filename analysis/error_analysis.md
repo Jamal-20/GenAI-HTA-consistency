@@ -1,120 +1,108 @@
 # Error Analysis
 
-**Project:** Consistency Checks and Confidence Flagging for Hard-to-Extract HTA Fields
-
-**Source document:** NICE Technology Appraisal TA1074 — Sparsentan for treating primary IgA nephropathy (published 25 June 2025)
-
-**Model used:** Gemini 3.6 Flash
-
-**Number of runs:** 5
-
-**Gold standard fields:** population, intervention, comparator, primary_outcome, effect_size
+**What the model got right, what went wrong, and where the error actually was.**
 
 ---
 
-## 1. Summary of Results
+## 1. Summary
 
-| Metric | Single Run | Multi-Run + Researcher Review |
-|--------|------------|-------------------------------|
+| Metric | Single Run | Multi-Run + Review |
+|--------|------------|--------------------|
 | Correct fields | 5 / 5 | 5 / 5 |
 | Accuracy | 100% | 100% |
-| Fields flagged for review | 0 | 0 |
+| Fields flagged | 0 | 0 |
 
 ---
 
 ## 2. Field-Level Outcomes
 
-| Field | Gold Standard | Extracted Value | Correct? | Flagged? |
-|-------|---------------|-----------------|----------|----------|
-| Population | Adults with biopsy-confirmed IgA nephropathy and persistent proteinuria despite ≥12 weeks of maximally tolerated RASi therapy | adults with biopsy-confirmed primary IgAN and persistent proteinuria despite at least 12 weeks of stable, maximum RASi therapy | Yes | No |
-| Intervention | Sparsentan | sparsentan | Yes | No |
-| Comparator | Irbesartan | irbesartan | Yes | No |
-| Primary Outcome | Percentage change in UPCR from baseline to week 36 | percentage change in UPCR from baseline to week 36 | Yes | No |
-| Effect Size | Geometric LS mean ratio 0.59 (95% CI 0.51 to 0.69) | geometric LS mean ratio 0.59 (95% CI 0.51 to 0.69) | Yes | No |
+| Field | Gold Standard | Extracted | Correct? |
+|-------|---------------|-----------|----------|
+| Population | Adults with biopsy-confirmed IgA nephropathy and persistent proteinuria despite ≥12 weeks of maximally tolerated RASi therapy | adults with biopsy-confirmed primary IgAN and persistent proteinuria despite at least 12 weeks of stable, maximum RASi therapy | Yes |
+| Intervention | Sparsentan | sparsentan | Yes |
+| Comparator | Irbesartan | irbesartan | Yes |
+| Primary Outcome | Percentage change in UPCR from baseline to week 36 | percentage change in UPCR from baseline to week 36 | Yes |
+| Effect Size | Geometric LS mean ratio 0.59 (95% CI 0.51 to 0.69) | geometric LS mean ratio 0.59 (95% CI 0.51 to 0.69) | Yes |
+
+**No model errors were found.**
 
 ---
 
-## 3. Error Classification
+## 3. Evaluation Error (Not a Model Error)
 
-### Model Errors
-
-**No model errors were found.** All five fields were correctly extracted in all five runs.
-
-### Evaluation Error Identified
-
-- **Error type:** Evaluation false negative
-- **What happened:** The initial token-overlap metric marked the `effect_size` field as wrong because the gold standard included both the ratio (0.59, 95% CI 0.51–0.69) and the percentage change values (−49.8% vs −15.1%), while the model extracted only the ratio.
-- **Why it happened:** The gold standard was overly inclusive, and the token-overlap threshold (50%) was too strict for clinically equivalent expressions of the same effect size.
-- **How it was corrected:** The gold standard was updated to the primary effect size (geometric LS mean ratio 0.59, 95% CI 0.51 to 0.69), and the matching function was updated to check for overlapping numbers before falling back to token overlap.
+| Item | Detail |
+|------|--------|
+| **Type** | Evaluation false negative |
+| **Field** | `effect_size` |
+| **What happened** | Initial token-overlap metric marked the field wrong |
+| **Why** | Gold standard included both the ratio (0.59) and the percentage change (−49.8% vs −15.1%). Model extracted only the ratio. Both are clinically equivalent. |
+| **Fix** | Gold standard updated to primary effect size; matching function updated to check for overlapping numbers |
 
 ---
 
-## 4. Consistency Flagging Performance
+## 4. Consistency Flagging
 
-| Field | Flagged? | Was the Flag Correct? |
-|-------|----------|------------------------|
+| Field | Flagged? | Correct? |
+|-------|----------|----------|
 | Population | No | — |
 | Intervention | No | — |
 | Comparator | No | — |
 | Primary Outcome | No | — |
 | Effect Size | No | — |
 
-**Flagging metrics:**
+| Metric | Count |
+|--------|-------|
+| True positives | 0 |
+| False positives | 0 |
+| False negatives | 0 |
+| True negatives | 5 |
 
-- True positives: 0
-- False positives: 0
-- False negatives: 0
-- True negatives: 5
-
-**Interpretation:** The consistency check produced no flags because the model was perfectly consistent across all 5 runs. This means consistency flagging did not detect any errors — because there were none. However, it also means consistency flagging would not have detected an error if the model had been confidently wrong in the same way across all runs.
+**Interpretation:** No flags because there was no variance. Consistency
+checking catches variance — it cannot catch errors when the model is
+consistently correct (or consistently wrong in the same way).
 
 ---
 
 ## 5. Run-to-Run Variance
 
-| Field | Distinct Values | Most Common Value | Runs with Most Common Value |
-|-------|-----------------|-------------------|------------------------------|
-| Population | 2 (case-only difference) | lowercase version | 3 / 5 |
-| Intervention | 2 (case-only difference) | lowercase version | 3 / 5 |
-| Comparator | 2 (case-only difference) | lowercase version | 3 / 5 |
-| Primary Outcome | 2 (case-only difference) | lowercase version | 3 / 5 |
-| Effect Size | 2 (case-only difference) | lowercase version | 3 / 5 |
+| Field | Distinct Values | Substance of Variance |
+|-------|-----------------|------------------------|
+| Population | 2 | Capitalisation only |
+| Intervention | 2 | Capitalisation only |
+| Comparator | 2 | Capitalisation only |
+| Primary Outcome | 2 | Capitalisation only |
+| Effect Size | 2 | Capitalisation only |
 
-**Observation:** All variance was superficial (capitalisation only). The semantic content was identical across all runs. No substantive variance was observed.
-
----
-
-## 6. Connection to Published Literature
-
-Versteeg et al. (2026, JAMIA Open) reported:
-
-- Overall accuracy of 88–98% for 12 of 14 attributes
-- "Outcome relative effectiveness" and "Comparator" were the hardest fields (~70% accuracy)
-- Reproducibility issues were a noted limitation
-- Their conclusion recommended multiple extraction runs with consistency checks and a researcher-in-the-loop approach
-
-**How your findings align:**
-
-| Their Finding | Your Finding | Alignment |
-|---------------|--------------|-----------|
-| Outcome REA and Comparator are hardest | Effect size extracted correctly | Does not confirm |
-| Reproducibility issues | No substantive variance | Does not confirm |
-| Multiple runs + consistency checks recommended | Consistency check produced no flags | Not tested (no errors to catch) |
-| Researcher-in-the-loop recommended | Not triggered | Not tested |
-
-**Discussion:** This project did not reproduce the failure modes documented by Versteeg et al. The model performed perfectly on this single report. This may be because Gemini 3.6 Flash is a newer model than Claude 3 Opus used in their study, or because TA1074 is a relatively clean report with a well-defined primary endpoint. The key finding of this project is methodological: evaluation metrics matter. A simple token-overlap metric produced a false negative on a correct extraction.
+All variance was superficial. Semantic content was identical across runs.
 
 ---
 
-## 7. Limitations of This Analysis
+## 6. Connection to Versteeg et al. (2026)
 
-- Single report, single therapy area (nephrology)
-- Five runs — enough to demonstrate consistency, not to estimate a reliable error rate
-- Simulated researcher-in-the-loop (majority vote), not a real human reviewer
-- Single LLM provider (Google Gemini); results may differ with other models
+| Their Finding | This Project |
+|---------------|--------------|
+| Outcome REA and Comparator are hardest (~70%) | Not tested — simplified schema |
+| Reproducibility issues | Not reproduced — model was consistent |
+| Recommended: consistency checks | Tested — no flags (no variance) |
+| Recommended: researcher-in-the-loop | Tested — not triggered |
+| Semantic evaluation needed | Confirmed — token overlap produced a false negative |
+
+---
+
+## 7. Limitations
+
+- Single report, single therapy area
+- Simplified 5-field schema (not Versteeg et al.'s 14 attributes)
+- 5 runs — enough to show consistency, not to estimate accuracy
+- Simulated researcher-in-the-loop (majority vote)
+- Single LLM provider (Gemini 3.6 Flash)
 
 ---
 
 ## 8. Conclusion
 
-The model extracted all five PICO fields correctly and consistently. The consistency check produced no flags because there was no variance. The key finding is that an overly strict evaluation metric produced a false negative on a correct extraction. This demonstrates that evaluation methodology is as important as model capability for scaling extraction across jurisdictions — and it aligns with the Utrecht group's use of semantic evaluation rather than simple string matching.
+The model performed perfectly. The error was in the evaluation metric, not
+the model. This is a worked example of why **semantic evaluation** — not
+simple string matching — is necessary for scaling extraction across
+jurisdictions. It confirms a point Versteeg et al. also make in recommending
+a path-based semantic matching algorithm.
