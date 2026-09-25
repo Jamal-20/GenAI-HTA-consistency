@@ -19,8 +19,11 @@ against a manually constructed gold standard.
 **NICE TA1074** — *Sparsentan for treating primary IgA nephropathy* (2025).\
 Public guidance: https://www.nice.org.uk/guidance/ta1074
 
-## 3. Method
+## 3. Workflow and Methodology
 
+![Pipeline Diagram](Research_workflow.png)
+
+#
 1. Manually extracted 5 gold-standard PICO fields.
 2. Designed a structured JSON extraction prompt with anti-hallucination rules.
 3. Ran the prompt **5 times** using **Gemini 3.6 Flash** (temperature 0.1).
